@@ -1,0 +1,21 @@
+services:      
+  postgres:
+    image: postgres:latest
+    restart: always
+    environment:
+      POSTGRES_USER=${POSTGRES_USER}
+      POSTGRES_DB=${POSTGRES_DB}
+      POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      PGDATA=/var/lib/postgresql/data/pgdata
+    ports:
+      - ${POSTGRES_PORT}:5432
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data/pgdata
+    command: >
+     postgres
+       -c listen_addresses=*
+       -c logging_collector=on
+       -c log_destination=stderr
+       -c max_connections=200
+    env_file:
+      - ../.env
