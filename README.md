@@ -41,5 +41,7 @@ alembic init --template async alembic
 alembic revision --autogenerate -m "First migration" 
 alembic upgrade head
 ```
-
-psql -H localhost -P 5432 -U posgres -d postgres
+Проверка БД.
+```shell
+psql -h localhost -p 5432 -U postgres -W postgres
+```
