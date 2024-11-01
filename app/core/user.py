@@ -4,8 +4,12 @@ from fastapi import Depends, Request
 from fastapi_users import (
     BaseUserManager, FastAPIUsers, IntegerIDMixin, InvalidPasswordException
 )
+import redis.asyncio
 from fastapi_users.authentication import (
-    AuthenticationBackend, BearerTransport, JWTStrategy
+    RedisStrategy,
+    AuthenticationBackend, 
+    BearerTransport, 
+    JWTStrategy,
 )
 from fastapi_users_db_sqlalchemy import SQLAlchemyUserDatabase
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -26,12 +30,24 @@ bearer_transport = BearerTransport(tokenUrl='auth/jwt/login')
 def get_jwt_strategy() -> JWTStrategy:
     return JWTStrategy(secret=settings.secret, lifetime_seconds=3600)
 
+redis = redis.asyncio.from_url("redis://localhost:6379", decode_responses=True)
+
+
+def get_redis_strategy() -> RedisStrategy:
+    return RedisStrategy(redis, lifetime_seconds=3600)
+
 
 auth_backend = AuthenticationBackend(
-    name='jwt',
+    name='redis',
     transport=bearer_transport,
-    get_strategy=get_jwt_strategy,
+    get_strategy=get_redis_strategy,
 )
+
+# auth_backend = AuthenticationBackend(
+#     name='jwt',
+#     transport=bearer_transport,
+#     get_strategy=get_jwt_strategy,
+# )
 
 
 class UserManager(IntegerIDMixin, BaseUserManager[User, int]):

@@ -45,3 +45,7 @@ alembic upgrade head
 ```shell
 psql -h localhost -p 5432 -U postgres -W postgres
 ```
+
+```shell
+redis://username:password@193.3.298.206:6380/0
+```
