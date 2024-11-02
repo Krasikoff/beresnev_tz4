@@ -41,6 +41,7 @@ alembic init --template async alembic
 alembic revision --autogenerate -m "First migration" 
 alembic upgrade head
 ```
+
 Проверка БД.
 ```shell
 psql -h localhost -p 5432 -U postgres -W postgres
@@ -48,4 +49,15 @@ psql -h localhost -p 5432 -U postgres -W postgres
 
 ```shell
 redis://username:password@193.3.298.206:6380/0
+```
+
+Прверка БД.
+```shell
+redis-cli -h 127.0.0.1 -p 6380 -a redis
+```
+```shell
+redis> set test:1:string "my binary safe string" OK
+```
+```shell
+redis> get test:1:string "my binary safe string"
 ```

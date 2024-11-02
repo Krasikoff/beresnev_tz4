@@ -1,4 +1,3 @@
-from datetime import datetime
 from pydantic import BaseModel
 
 
@@ -6,19 +5,18 @@ class TaskBase(BaseModel):
     name: str
     descr: str
     status: str
-    created_date: datetime
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
-class ButtonCreation(BaseModel):
+class TaskCreation(BaseModel):
     name: str
     descr: str
     status: str
 
 
-class ButtonUpdate(BaseModel):
+class TaskUpdate(BaseModel):
     name: str
     descr: str
     status: str
