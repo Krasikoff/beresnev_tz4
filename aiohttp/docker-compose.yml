@@ -1,0 +1,9 @@
+services:
+  aiohttp:
+    image: krasikoff/aiohttp-hello:latest
+    container_name: aiohttp_container
+    environment:
+      PASSWORD: "aiohttp"
+      USER: "aiohttp"
+    ports:
+      - "8080:8080"

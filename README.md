@@ -16,9 +16,39 @@ git push -u origin main && source venv/bin/activate
 python -m pip install --upgrade pip
 pip install -r requirements.txt
 ```
-- Запуск контейнера с postgres
+- Запуск postgres. Переходим в соотвтетствующую директрорию.
 ```shell
+cd postgres
 docker compose up -d
+```
+
+Проверка БД.
+```shell
+psql -h localhost -p 5432 -U postgres -W postgres
+cd ..
+```
+запуск redis.
+```shell
+cd redis
+redis://username:password@193.3.298.206:6380/0
+```
+
+Прверка redis.
+```shell
+redis-cli -h 127.0.0.1 -p 6379 -a redis
+cd ..
+```
+
+- Запуск aiohttp. Переходим в соотвтетствующую директрорию.
+```shell
+cd aiohttp
+docker compose up -d
+```
+
+проверка aiohttp
+```shell
+http://localhost:8080
+cd ..
 ```
 
 - Запуск приложения.
@@ -42,18 +72,11 @@ alembic revision --autogenerate -m "First migration"
 alembic upgrade head
 ```
 
-Проверка БД.
-```shell
-psql -h localhost -p 5432 -U postgres -W postgres
-```
+
+Проверка redis.
 
 ```shell
-redis://username:password@193.3.298.206:6380/0
-```
-
-Прверка БД.
-```shell
-redis-cli -h 127.0.0.1 -p 6380 -a redis
+redis-cli -h 127.0.0.1 -p 6379 -a redis
 ```
 ```shell
 redis> set test:1:string "my binary safe string" OK
