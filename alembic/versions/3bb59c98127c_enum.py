@@ -1,8 +1,8 @@
-"""Change relations.
+"""Enum.
 
-Revision ID: 1bd1b49eced5
-Revises: 4fe7aaf83585
-Create Date: 2024-11-02 15:50:58.769635
+Revision ID: 3bb59c98127c
+Revises: 434c43bf060b
+Create Date: 2024-11-03 13:58:52.668424
 
 """
 from alembic import op
@@ -10,8 +10,8 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '1bd1b49eced5'
-down_revision = '4fe7aaf83585'
+revision = '3bb59c98127c'
+down_revision = '434c43bf060b'
 branch_labels = None
 depends_on = None
 

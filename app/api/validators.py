@@ -4,6 +4,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.crud.task import task_crud
 from app.models import User, Task
 
+
 async def check_task_exists(
         task_id: int,
         session: AsyncSession,
@@ -16,14 +17,15 @@ async def check_task_exists(
         )
     return task
 
+
 async def check_task_owner(
         task: Task,
         user: User,
         session: AsyncSession,
 ) -> Task:
-    if task.id == user.id and not user.is_superuser:
+    if task.user_id != user.id and not user.is_superuser:
         raise HTTPException(
             status_code=404,
-            detail='Не свой task удалять нельзя!'
+            detail='Не свой task удалять или изменять нельзя!'
         )
     return task

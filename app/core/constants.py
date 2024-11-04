@@ -1,13 +1,7 @@
 from enum import Enum
 
-STATUS = (
-    ('NO STATUS', 'Не начата'),
-    ('WORKING ON', 'В работе'),
-    ('FINISHED', 'Закончена'),
-)
 
-
-class Status (str, Enum):
-    NO_STATUS = 'Не начата'
-    WORKING_ON = 'В работе'
-    FINISHED = 'Закончена'
+class Status(Enum):
+    NO_STATUS = 'no_status'
+    WORKING_ON = 'working_on'
+    FINISHED = 'finished'
