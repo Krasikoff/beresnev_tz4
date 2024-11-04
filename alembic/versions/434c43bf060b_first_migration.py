@@ -5,9 +5,10 @@ Revises:
 Create Date: 2024-11-03 02:13:31.750763
 
 """
-from alembic import op
 import sqlalchemy as sa
 import sqlalchemy_utils
+
+from alembic import op
 from app.core.constants import Status
 
 # revision identifiers, used by Alembic.

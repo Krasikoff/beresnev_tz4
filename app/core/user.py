@@ -1,31 +1,25 @@
+"""Модуль работы с пользователями, настройки аутенфикации."""
 from typing import Optional, Union
-from pydantic import BaseModel
+
 from fastapi import Depends, Request, Response
 from fastapi.responses import JSONResponse
-from fastapi_users.schemas import model_dump
-from fastapi_users import (
-    BaseUserManager, FastAPIUsers, IntegerIDMixin, InvalidPasswordException
-)
+from fastapi_users import (BaseUserManager, FastAPIUsers, IntegerIDMixin,
+                           InvalidPasswordException, models)
+from fastapi_users.authentication import (AuthenticationBackend,
+                                          BearerTransport, JWTStrategy)
 from fastapi_users.authentication.strategy import Strategy
 from fastapi_users.authentication.transport import Transport
-from fastapi_users import models
-from fastapi_users.authentication import (
-    JWTStrategy,
-    AuthenticationBackend,
-    BearerTransport,
-)
+from fastapi_users.schemas import model_dump
 from fastapi_users_db_sqlalchemy import SQLAlchemyUserDatabase
+from pydantic import BaseModel
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.core.config import settings
 from app.core.db import get_async_session
+from app.core.redis import (create_refresh_token, get_refresh_token,
+                            set_refresh_token)
 from app.models.user import User
 from app.schemas.user import UserCreate
-from app.core.redis import (
-    get_refresh_token,
-    set_refresh_token,
-    create_refresh_token,
-)
-from app.core.config import settings
 
 
 async def get_user_db(session: AsyncSession = Depends(get_async_session)):
@@ -33,12 +27,14 @@ async def get_user_db(session: AsyncSession = Depends(get_async_session)):
 
 
 class BearerResponse(BaseModel):
+    """Класс возврата пользавателю токенов.""" 
     access_token: str
     token_type: str
     refresh_token: str
 
 
 class MyBearerTransport(BearerTransport):
+    """Отнаследованный класс транспорта, добавлен refresh_token"""
     async def get_login_response(
             self,
             token: str,
@@ -60,12 +56,14 @@ def get_jwt_strategy() -> JWTStrategy:
 
 
 class MyTransport(Transport):
+    """Отнаследованный класс транспорта, добавлен refresh_token"""
     async def get_login_response(
             self, token: str, refresh_token: str) -> Response:
         ...  # pragma: no cover
 
 
 class MyAuthenticationBackend(AuthenticationBackend):
+    """Отнаследованный класс аутенфикации, добавлен refresh_token"""
     name: str
     transport: MyTransport
 
@@ -73,13 +71,13 @@ class MyAuthenticationBackend(AuthenticationBackend):
         self, strategy: Strategy[models.UP, models.ID], user: models.UP
     ) -> Response:
         try:
-            refresh_token = await get_refresh_token(user.id)
+            refresh_token = await get_refresh_token(user.email)
         except Exception as e:
             print(e)
             refresh_token = await create_refresh_token(
-                data={"sub": user.id}
+                data={"sub": user.email}
             )
-            result = await set_refresh_token(user.id, refresh_token)
+            result = await set_refresh_token(user.email, refresh_token)
             if not result:
                 raise Exception
         token = await strategy.write_token(user)
@@ -94,7 +92,7 @@ auth_backend = MyAuthenticationBackend(
 
 
 class UserManager(IntegerIDMixin, BaseUserManager[User, int],):
-
+    """Класс менеджера пользователей."""
     async def validate_password(
             self,
             password: str,

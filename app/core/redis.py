@@ -1,6 +1,8 @@
-import aioredis
+"""Модуль работы с redis."""
 import pickle
 from datetime import datetime, timedelta
+
+import aioredis
 from jwt import encode
 
 redis = aioredis.from_url("redis://localhost")

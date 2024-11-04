@@ -1,14 +1,13 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
-from app.core.db import get_async_session
-from app.core.user import current_user
-
-from app.schemas.task import TaskBase, TaskCreation, TaskUpdate
-from app.crud.task import task_crud
-from app.models import User
-from app.core.constants import Status
 
 from app.api.validators import check_task_exists, check_task_owner
+from app.core.constants import Status
+from app.core.db import get_async_session
+from app.core.user import current_user
+from app.crud.task import task_crud
+from app.models import User
+from app.schemas.task import TaskBase, TaskCreation, TaskUpdate
 
 router = APIRouter()
 
@@ -38,12 +37,34 @@ async def get_all_tasks_filter(
         user: User = Depends(current_user),
         session: AsyncSession = Depends(get_async_session),
 ):
-    "возможностью фильтрации по статусу и принадлежность пользователю. "
+    "C возможностью фильтрации по статусу и принадлежность пользователю. "
     if status:
         print(status)
         all_tasks = await task_crud.get_multy_with_filter(
             status, user, session=session,
         )
+    return all_tasks
+
+
+@router.get(
+    '/{status}/superuser/',
+    response_model=list[TaskBase],
+    response_model_exclude_none=True,
+)
+async def get_all_tasks_filter(
+        status: Status,
+        user: User = Depends(current_user),
+        session: AsyncSession = Depends(get_async_session),
+):
+    "C возможностью фильтрации по статусу режим суперюзер."
+    if status:
+        if user.is_superuser:
+            all_tasks = await task_crud.get_multy_with_filter(
+                status, session=session,
+            )
+    else:
+        raise HTTPException(status_code=401,
+                            detail="Вы не superuser")
     return all_tasks
 
 
@@ -56,9 +77,31 @@ async def get_all_tasks(
         session: AsyncSession = Depends(get_async_session),
         user: User = Depends(current_user),
 ):
-    "возможностью фильтрации по статусу и принадлежность пользователю. "
-    all_tasks = await task_crud.get_multi(session)
+    "Все принадлежащие пользователю task."
+    all_tasks = await task_crud.get_multy_with_filter(
+        status=None,
+        user=user,
+        session=session,
+    )
     return all_tasks
+
+
+@router.get(
+    '/superuser/',
+    response_model=list[TaskBase],
+    response_model_exclude_none=True,
+)
+async def get_all_tasks(
+        session: AsyncSession = Depends(get_async_session),
+        user: User = Depends(current_user),
+):
+    "Все task не зависимо от принадлежности user."
+    if user.is_superuser:
+        all_tasks = await task_crud.get_multi(session)
+        return all_tasks
+    else:
+        raise HTTPException(status_code=401,
+                            detail="Вы не superuser")
 
 
 @router.put(

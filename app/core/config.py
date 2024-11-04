@@ -1,3 +1,4 @@
+"""Модуль настройки приложения."""
 from pathlib import Path
 
 from pydantic_settings import BaseSettings
@@ -6,6 +7,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 class Settings(BaseSettings):
+    """Класс настроек."""
     app_title: str = 'Input title in .env'
     app_title: str = 'Later'
     app_description: str = 'Later'

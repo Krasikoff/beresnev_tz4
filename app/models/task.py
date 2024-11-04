@@ -1,11 +1,14 @@
-from sqlalchemy import Column, String, Text, Integer, ForeignKey
+"""Модуль модели."""
+from sqlalchemy import Column, ForeignKey, Integer, String, Text
 from sqlalchemy.orm import relationship
 from sqlalchemy_utils import ChoiceType
+
 from app.core.constants import Status
 from app.core.db import Base
 
 
 class Task(Base):
+    """Класс модели."""
     name = Column(String(100), nullable=False)
     descr = Column(Text())
     status = Column(

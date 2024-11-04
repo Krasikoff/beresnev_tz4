@@ -1,11 +1,13 @@
-from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
-from sqlalchemy.orm import declarative_base, sessionmaker, declared_attr
+"""Модуль подключения к БД."""
 from sqlalchemy import Column, Integer
+from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
+from sqlalchemy.orm import declarative_base, declared_attr, sessionmaker
+
 from app.core.config import settings
 
 
 class PreBase:
-
+    """Пребазовый класс моделей."""
     @declared_attr
     def __tablename__(cls):
         return cls.__name__.lower()
@@ -20,7 +22,6 @@ database_url = (
     f'{settings.postgres_password}@{settings.postgres_host}:'
     f'{settings.postgres_port}/{settings.postgres_db}'
 )
-print(database_url)
 engine = create_async_engine(database_url)
 
 AsyncSessionLocal = sessionmaker(engine, class_=AsyncSession)

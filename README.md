@@ -1,22 +1,15 @@
 # beresnev_tz4
 
-## запуск приложения в dev режиме.
+## запуск приложения.
 
 - Клонируем репозиторий.
 
 ```shell
 git@github.com:Krasikoff/beresnev_tz4.git
 ```
-- Устанавливаем окружение.
-```shell
-git push -u origin main && source venv/bin/activate
-```
-- Устанавливаем заисимости.
-```shell
-python -m pip install --upgrade pip
-pip install -r requirements.txt
-```
+
 - Запуск postgres. Переходим в соотвтетствующую директрорию.
+(предположительно докер установлен)
 ```shell
 cd postgres
 docker compose up -d
@@ -27,10 +20,10 @@ docker compose up -d
 psql -h localhost -p 5432 -U postgres -W postgres
 cd ..
 ```
-запуск redis.
+- Запуск redis. Переходим в соотвтетствующую директрорию.
 ```shell
 cd redis
-redis://username:password@193.3.298.206:6380/0
+docker compose up -d
 ```
 
 Прверка redis.
@@ -51,16 +44,35 @@ http://localhost:8080
 cd ..
 ```
 
+## запуск приложения в docker режиме.
+
+```shell
+docker build -t tz4 .
+docker run -d --name tz4 -p 8000:8000 tz4
+docker exec -it tz4 alembic upgrade head
+```
+
+
+```shell
+docker compose up -d
+```
+
+## в develop режиме.
+- Устанавливаем окружение.
+```shell
+git push -u origin main && source venv/bin/activate
+```
+- Устанавливаем заисимости.
+```shell
+python -m pip install --upgrade pip
+pip install -r requirements.txt
+```
+
 - Запуск приложения.
 ```shell
 uvicorn app.main:app --reload 
 ```
 
-## запуск приложения в docker режиме.
-    (предположительно докер установлен)
-```shell
-docker compose up -d
-```
 
 to be continued....
 
