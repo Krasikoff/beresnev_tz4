@@ -27,7 +27,7 @@ async def get_user_db(session: AsyncSession = Depends(get_async_session)):
 
 
 class BearerResponse(BaseModel):
-    """Класс возврата пользавателю токенов.""" 
+    """Класс возврата пользавателю токенов."""
     access_token: str
     token_type: str
     refresh_token: str

@@ -14,12 +14,17 @@ class Settings(BaseSettings):
     postgres_db: str = 'postgres'
     postgres_user: str = 'postgres'
     postgres_password: str = 'postgres'
-    postgres_host: str = 'localhost'
+    postgres_host: str = 'postgres_container'
     postgres_port: str = '5432'
-
+    pgdata: str = '/var/lib/postgresql/data/pgdata'
+    redis_host: str = "redis_container"
+    redis_password: str = 'redis'
+    redis_user: str = 'redis'
+    redis_user_password: str = 'redis'
     secret: str = 'SECRET'
 
     class Config:
+        """Класс конфигурации класса настроек."""
         env_file = '.env'
 
 

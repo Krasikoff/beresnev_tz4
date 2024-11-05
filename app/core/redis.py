@@ -5,7 +5,9 @@ from datetime import datetime, timedelta
 import aioredis
 from jwt import encode
 
-redis = aioredis.from_url("redis://localhost")
+from app.core.config import settings
+
+redis = aioredis.from_url(f'redis://{settings.redis_host}')
 
 
 async def get_refresh_token(user_id):
