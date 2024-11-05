@@ -21,7 +21,7 @@ git@github.com:Krasikoff/beresnev_tz4.git
 ```
 
 - Запуск postgres. Переходим в соотвтетствующую директрорию.
-(предположительно докер установлен, sudo перед docker в зависимости от настроек и os)
+(предположительно докер установлен, sudo перед docker в зависимости от настроек и os )
 ```shell
 cd postgres
 docker compose up -d
@@ -63,6 +63,7 @@ cd ..
 ```
 
 ## Запуск backend-приложения в docker режиме.
+(не забываем создать файл .env как в env.example!!!)
 
 ```shell
 docker build -t tz4 .
