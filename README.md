@@ -94,7 +94,7 @@ http://localhost:8000/docs/
 ## в develop режиме.
 - Устанавливаем окружение.
 ```shell
-git push -u origin main && source venv/bin/activate
+python -m venv venv && source venv/bin/activate
 ```
 - Устанавливаем заисимости.
 ```shell
